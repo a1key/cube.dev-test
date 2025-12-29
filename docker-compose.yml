@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: DBNAME
+      POSTGRES_USER: DBUSER
+      POSTGRES_PASSWORD: DBPASS
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  cube:
+    image: cubejs/cube:latest
+    ports: 
+      - "4000:4000"
+    environment:
+      CUBEJS_DEV_MODE: "true"
+      CUBEJS_API_SECRET: "SECRET"
+      CUBEJS_DB_TYPE: postgres
+      CUBEJS_DB_HOST: HOST
+      CUBEJS_DB_PORT: PORT
+      CUBEJS_DB_NAME: DBNAME
+      CUBEJS_DB_USER: DBUSER
+      CUBEJS_DB_PASS: DBPASS
+    depends_on:
+      - postgres
+    volumes:
+      - ./cube:/cube/conf
+
+volumes:
+  pgdata:
